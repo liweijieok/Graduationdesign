@@ -1,13 +1,12 @@
-package com.iweijie.design.graduation.gallery;
+package com.iweijie.design.graduation.gallery.base;
 
-import android.support.annotation.Nullable;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 
-import com.iweijie.design.graduation.gallery.base.BaseActivity;
-
-public class GalleryMainActivity extends BaseActivity {
-
-
+/**
+ * Created by liweijie on 2016/5/18.
+ */
+public class WelcomeActivity extends BaseActivity{
     @Override
     public void initView() {
 
@@ -30,7 +29,7 @@ public class GalleryMainActivity extends BaseActivity {
 
     @Override
     public int getLayoutId() {
-        return R.layout.gallery_main_activity;
+        return 0;
     }
 
     @Override

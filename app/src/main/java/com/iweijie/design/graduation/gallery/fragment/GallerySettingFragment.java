@@ -1,13 +1,14 @@
-package com.iweijie.design.graduation.gallery;
+package com.iweijie.design.graduation.gallery.fragment;
 
-import android.support.annotation.Nullable;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 
-import com.iweijie.design.graduation.gallery.base.BaseActivity;
+import com.iweijie.design.graduation.gallery.base.BaseFragment;
 
-public class GalleryMainActivity extends BaseActivity {
-
-
+/**
+ * Created by liweijie on 2016/5/19.
+ */
+public class GallerySettingFragment extends BaseFragment {
     @Override
     public void initView() {
 
@@ -30,7 +31,7 @@ public class GalleryMainActivity extends BaseActivity {
 
     @Override
     public int getLayoutId() {
-        return R.layout.gallery_main_activity;
+        return 0;
     }
 
     @Override

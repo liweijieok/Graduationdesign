@@ -5,5 +5,6 @@ package com.iweijie.design.graduation.gallery.app;
  * 全局常量
  */
 public class GalleryConstants {
+    public static final boolean IS_DEBUG = true;
 
 }
