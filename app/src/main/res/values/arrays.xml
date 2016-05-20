@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+        <string-array name="left_menu_title">
+            <item>gallery</item>
+            <item>setting</item>
+        </string-array>
+</resources>
