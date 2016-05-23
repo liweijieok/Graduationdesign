@@ -12,6 +12,8 @@ import com.liweijie.design.graduation.gallery.impl.ComponentsImpl;
 import com.liweijie.design.graduation.gallery.poxy.ComponentsImplProxy;
 import com.liweijie.design.graduation.gallery.util.LG;
 
+import butterknife.ButterKnife;
+
 /**
  * Created by liweijie on 2016/5/18.
  * BaseFragment
@@ -43,8 +45,10 @@ public abstract class BaseFragment extends Fragment implements ComponentsImpl {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         BL.d("Fragment onCreateView");
         mComponentsImplProxy = new ComponentsImplProxy(this);
+        mComponentsImplProxy.beforeInit();
         int layoutId = mComponentsImplProxy.getLayoutId();
         mContentView = inflater.inflate(layoutId, null);
+        ButterKnife.bind(this,mContentView);
         mComponentsImplProxy.init(savedInstanceState);
         return mContentView;
     }
@@ -111,5 +115,6 @@ public abstract class BaseFragment extends Fragment implements ComponentsImpl {
         super.onDestroy();
         BL.d("Fragment onDestroy");
         mComponentsImplProxy.destroyComponents();
+        ButterKnife.unbind(this);
     }
 }

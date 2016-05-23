@@ -21,8 +21,8 @@ public class ComponentsImplProxy implements ComponentsImpl {
 
     public void init(Bundle savedInstanceState) {
         recoverAndBeforeInfalter(savedInstanceState);
-        initEvent();
         initData();
+        initEvent();
     }
 
     @Override

@@ -9,38 +9,79 @@ import com.liweijie.design.graduation.gallery.app.GalleryConstants;
  */
 public class L {
 
+
+    public static void i(String tag, String msg) {
+        Log.i("gallery-->info" + tag, msg);
+    }
+
     public static void i(String msg) {
         if (!GalleryConstants.IS_DEBUG) {
             return;
         }
-        Log.i("gallery-->info", msg);
+        i(null, msg);
+    }
+
+    public static void d(String tag, String msg) {
+        if (!GalleryConstants.IS_DEBUG) {
+            return;
+        }
+        Log.d("gallery-->debug" + tag, msg);
     }
 
     public static void d(String msg) {
         if (!GalleryConstants.IS_DEBUG) {
             return;
         }
-        Log.d("gallery-->debug", msg);
+        d(null, msg);
     }
+
+    public static void e(String tag, String msg) {
+        if (!GalleryConstants.IS_DEBUG) {
+            return;
+        }
+        Log.e("gallery--error>" + tag, msg);
+    }
+
 
     public static void e(String msg) {
         if (!GalleryConstants.IS_DEBUG) {
             return;
         }
-        Log.e("gallery--error>", msg);
+        e(null, msg);
+    }
+
+    public static void e(String tag, String msg, Throwable tr) {
+        if (!GalleryConstants.IS_DEBUG) {
+            return;
+        }
+        Log.e(tag, "error : ", tr);
+    }
+
+    public static void w(String tag, String msg) {
+        if (!GalleryConstants.IS_DEBUG) {
+            return;
+        }
+        Log.w("gallery-->warn" + tag, msg);
     }
 
     public static void w(String msg) {
         if (!GalleryConstants.IS_DEBUG) {
             return;
         }
-        Log.w("gallery-->warn", msg);
+        w(null, msg);
+    }
+
+    public static void v(String tag, String msg) {
+        if (!GalleryConstants.IS_DEBUG) {
+            return;
+        }
+        Log.v("gallery-->verbose" + tag, msg);
     }
 
     public static void v(String msg) {
         if (!GalleryConstants.IS_DEBUG) {
             return;
         }
-        Log.v("gallery-->verbose", msg);
+        v(null, msg);
     }
 }

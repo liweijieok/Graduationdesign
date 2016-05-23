@@ -1,6 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@android:color/holo_red_light"
+    style="@style/style4">
 
-</LinearLayout>
+    <LinearLayout
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:id="@+id/leftmenu_user_root"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/leftmenu_user_icon"
+            android:layout_width="96dp"
+            android:layout_height="96dp"
+            android:src="@drawable/user_icon"
+            app:civ_border_color="#FF000000"
+            app:civ_border_width="2dp" />
+
+        <TextView
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:layout_marginTop="10dp"
+            android:text="宝宝"
+            android:gravity="center_horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <include
+        android:layout_marginTop="20dp"
+        layout="@layout/core_recyclerview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/gallery_bottom_root"
+        android:layout_below="@+id/leftmenu_user_root" />
+
+
+</RelativeLayout>

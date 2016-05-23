@@ -23,7 +23,7 @@ import com.liweijie.design.graduation.gallery.fragment.GallerySettingFragment;
 
 import butterknife.Bind;
 
-public class GalleryMainActivity extends BaseActivity {
+public class GalleryMainActivity extends BaseActivity implements GalleryLeftMenuFragment.OnMenuItemSelectedListener{
     @Bind(R.id.main_toolbar)
     Toolbar main_toolbar;
     @Bind(R.id.main_drawerlayout)
@@ -116,7 +116,7 @@ public class GalleryMainActivity extends BaseActivity {
 
     @Override
     public void initEvent() {
-
+        mLeftMenu.setOnMenuItemSelectedListener(this);
     }
 
     @Override
@@ -155,5 +155,15 @@ public class GalleryMainActivity extends BaseActivity {
             return true;
         }
         return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    public void menuItemSelected(String title, int position) {
+        main_drawerlayout.closeDrawers();
+        if (position != mCurrentIndex) {
+            showFragment(position);
+            mTitle = title;
+            main_toolbar.setTitle(mTitle);
+        }
     }
 }

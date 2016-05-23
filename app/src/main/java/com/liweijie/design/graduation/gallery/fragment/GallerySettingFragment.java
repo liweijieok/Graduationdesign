@@ -3,6 +3,7 @@ package com.liweijie.design.graduation.gallery.fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 
+import com.liweijie.design.graduation.gallery.R;
 import com.liweijie.design.graduation.gallery.base.BaseFragment;
 
 /**
@@ -31,7 +32,7 @@ public class GallerySettingFragment extends BaseFragment {
 
     @Override
     public int getLayoutId() {
-        return 0;
+        return R.layout.other;
     }
 
 }

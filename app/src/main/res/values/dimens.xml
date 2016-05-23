@@ -4,6 +4,9 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="left_menu_height">240dp</dimen>
     <dimen name="toolbar_paddingtop">0dp</dimen>
-
+    <dimen name="iv_main_width">35dp</dimen>
+    <dimen name="img_main_height">40dp</dimen>
+    <dimen name="main_margin_left">10dp</dimen>
+    <dimen name="main_text_size">16sp</dimen>
 
 </resources>
