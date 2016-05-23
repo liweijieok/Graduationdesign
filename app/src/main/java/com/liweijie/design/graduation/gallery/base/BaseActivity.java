@@ -1,8 +1,10 @@
 package com.liweijie.design.graduation.gallery.base;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.view.WindowManager;
 
 import com.liweijie.design.graduation.gallery.impl.ComponentsImpl;
 import com.liweijie.design.graduation.gallery.poxy.ComponentsImplProxy;
@@ -24,6 +26,10 @@ public abstract class BaseActivity extends AppCompatActivity implements Componen
         int layoutId = componentsImplProxy.getLayoutId();
         componentsImplProxy.beforeInit();
         setContentView(layoutId);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            WindowManager.LayoutParams localLayoutParams = getWindow().getAttributes();
+            localLayoutParams.flags = (WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS | localLayoutParams.flags);
+        }
         ButterKnife.bind(this);
         BL = new LG(this.getClass());
         componentsImplProxy.init(savedInstanceState);

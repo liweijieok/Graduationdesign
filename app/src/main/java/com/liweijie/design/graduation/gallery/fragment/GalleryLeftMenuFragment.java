@@ -5,11 +5,23 @@ import android.support.annotation.Nullable;
 
 import com.liweijie.design.graduation.gallery.R;
 import com.liweijie.design.graduation.gallery.base.BaseFragment;
+import com.liweijie.design.graduation.gallery.bean.LeftmenuBean;
+
+import java.util.ArrayList;
+
+import butterknife.Bind;
 
 /**
  * Created by liweijie on 2016/5/19.
+ *
  */
 public class GalleryLeftMenuFragment extends BaseFragment {
+
+    @Bind(R.id.core_recycler_view)
+    private ArrayList<LeftmenuBean> mLeftMenu;
+
+    private String[] titles;
+    private int[] icons;
 
     private int mCurrentIndex;
     private static String KEY_INDEX = "key_index";
@@ -27,7 +39,7 @@ public class GalleryLeftMenuFragment extends BaseFragment {
 
     @Override
     public int getLayoutId() {
-        return R.layout.other;
+        return R.layout.leftmenu_fragment;
     }
 
     @Override
@@ -37,6 +49,9 @@ public class GalleryLeftMenuFragment extends BaseFragment {
 
     @Override
     public void beforeInit() {
+        titles = getActivity().getResources().getStringArray(R.array.left_menu_title);
+        icons = new int[]{R.drawable.main_gallery, R.drawable.main_collect, R.drawable.main_setting, R.drawable.main_about,
+                R.drawable.main_about};
         mCurrentIndex = getArguments().getInt(KEY_INDEX);
     }
 
@@ -47,6 +62,13 @@ public class GalleryLeftMenuFragment extends BaseFragment {
 
     @Override
     public void initData() {
+        mLeftMenu = new ArrayList<>();
+        for (int i=0;i<titles.length;i++) {
+            LeftmenuBean bean = new LeftmenuBean();
+            bean.setIcon(icons[i]);
+            bean.setTitle(titles[i]);
+            mLeftMenu.add(bean);
+        }
 
     }
 

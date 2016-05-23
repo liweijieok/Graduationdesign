@@ -1,10 +1,11 @@
 package com.liweijie.design.graduation.gallery;
 
-import android.net.Uri;
 import android.os.PersistableBundle;
 import android.support.annotation.Nullable;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
@@ -13,8 +14,12 @@ import android.view.KeyEvent;
 import android.view.View;
 
 import com.liweijie.design.graduation.gallery.base.BaseActivity;
+import com.liweijie.design.graduation.gallery.fragment.GalleryAboutFragment;
+import com.liweijie.design.graduation.gallery.fragment.GalleryCollectFragment;
 import com.liweijie.design.graduation.gallery.fragment.GalleryContentFragment;
 import com.liweijie.design.graduation.gallery.fragment.GalleryLeftMenuFragment;
+import com.liweijie.design.graduation.gallery.fragment.GallerySecretFragment;
+import com.liweijie.design.graduation.gallery.fragment.GallerySettingFragment;
 
 import butterknife.Bind;
 
@@ -32,7 +37,8 @@ public class GalleryMainActivity extends BaseActivity {
     private boolean isLeftMenuOpen = false;
 
     //内容页面
-    private Class[] mFragments = {GalleryContentFragment.class, GalleryLeftMenuFragment.class};
+    private Class[] mFragments = {GalleryContentFragment.class, GalleryCollectFragment.class,
+            GallerySecretFragment.class, GallerySettingFragment.class, GalleryAboutFragment.class};
     private FragmentManager fm;
     private GalleryLeftMenuFragment mLeftMenu;
 
@@ -70,7 +76,42 @@ public class GalleryMainActivity extends BaseActivity {
 
         main_drawerlayout.addDrawerListener(mDrawerToogler);
         mDrawerToogler.syncState();
+        showFragment(0);
 
+    }
+
+    private void showFragment(int i) {
+        FragmentTransaction fragmentTransaction = fm.beginTransaction();
+        hide(fragmentTransaction);
+        showFragment(i, fragmentTransaction,mFragments[i]);
+        fragmentTransaction.commit();
+
+    }
+
+    private <T extends Fragment> void showFragment(int index, FragmentTransaction fragmentTransaction,Class<T> clazz) {
+        Fragment fg = fm.findFragmentByTag(String.valueOf(index));
+        if (fg == null) {
+            try {
+                fg = clazz.newInstance();
+                fragmentTransaction.add(R.id.main_framelayout_content, fg, String.valueOf(index));
+            } catch (InstantiationException e) {
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
+
+        }else {
+            fragmentTransaction.show(fg);
+        }
+    }
+
+    private void hide(FragmentTransaction fragmentTransaction) {
+        for (int i=0;i<mFragments.length;i++) {
+            Fragment fg = fm.findFragmentByTag(String.valueOf(i));
+            if (fg != null) {
+                fragmentTransaction.hide(fg);
+            }
+        }
     }
 
     @Override
@@ -80,7 +121,7 @@ public class GalleryMainActivity extends BaseActivity {
 
     @Override
     public void recoverAndBeforeInfalter(@Nullable Bundle savedInstanceState) {
-        mTitle = savedInstanceState.getString(KEY_TITLE);
+        mTitle = savedInstanceState.getString(KEY_TITLE,null);
         mCurrentIndex = savedInstanceState.getInt(KEY_INDEX);
         if (TextUtils.isEmpty(mTitle)) {
             mTitle = getResources().getStringArray(R.array.left_menu_title)[0];
