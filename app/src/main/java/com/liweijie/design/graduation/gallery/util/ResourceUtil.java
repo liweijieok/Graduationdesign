@@ -1,6 +1,7 @@
 package com.liweijie.design.graduation.gallery.util;
 
 
+import com.liweijie.design.graduation.gallery.R;
 import com.liweijie.design.graduation.gallery.app.App;
 
 /**
@@ -16,8 +17,12 @@ public class ResourceUtil {
         return App.me().getResources().getColor(id);
     }
 
-    public static String[] getArray(int id) {
+    public static String[] getStringArray(int id) {
         return App.me().getResources().getStringArray(id);
+    }
+
+    public static float getDimen(int id) {
+        return App.me().getResources().getDimension(id);
     }
 
 }

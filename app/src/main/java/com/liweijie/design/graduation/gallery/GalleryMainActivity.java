@@ -16,7 +16,7 @@ import android.view.View;
 import com.liweijie.design.graduation.gallery.base.BaseActivity;
 import com.liweijie.design.graduation.gallery.fragment.GalleryAboutFragment;
 import com.liweijie.design.graduation.gallery.fragment.GalleryCollectFragment;
-import com.liweijie.design.graduation.gallery.fragment.GalleryContentFragment;
+import com.liweijie.design.graduation.gallery.fragment.content.GalleryContentFragment;
 import com.liweijie.design.graduation.gallery.fragment.GalleryLeftMenuFragment;
 import com.liweijie.design.graduation.gallery.fragment.GallerySecretFragment;
 import com.liweijie.design.graduation.gallery.fragment.GallerySettingFragment;

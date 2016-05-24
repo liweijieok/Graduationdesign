@@ -1,35 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <include
         layout="@layout/core_recyclerview"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@+id/gallery_bottom_root" />
+        android:layout_height="match_parent"/>
 
     <LinearLayout
+        android:background="@color/white"
+        android:layout_gravity="bottom"
         android:id="@+id/gallery_bottom_root"
-        style="@style/style3"
-        android:layout_alignParentBottom="true"
-        android:gravity="center"
+       android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:gravity="center_horizontal"
         android:orientation="horizontal">
 
         <LinearLayout
-            android:gravity="center"
-            android:layout_weight="1"
             style="@style/style1"
+            android:layout_weight="1"
+            android:gravity="center"
             android:orientation="vertical">
 
             <TextView
                 style="@style/style1"
                 android:text="新建相册" />
         </LinearLayout>
+
         <LinearLayout
-            android:gravity="center"
-            android:layout_weight="1"
             style="@style/style1"
+            android:layout_weight="1"
+            android:gravity="center"
             android:orientation="vertical">
 
             <TextView
@@ -37,4 +39,4 @@
                 android:text="菜单" />
         </LinearLayout>
     </LinearLayout>
-</LinearLayout>
+</FrameLayout>

@@ -10,6 +10,8 @@ import com.liweijie.design.graduation.gallery.coer.GalleryGlobalException;
  * GalleryApplication
  */
 public class GalleryApplication extends Application {
+
+
     @Override
     public void onCreate() {
         super.onCreate();

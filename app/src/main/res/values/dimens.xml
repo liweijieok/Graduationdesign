@@ -8,5 +8,7 @@
     <dimen name="img_main_height">40dp</dimen>
     <dimen name="main_margin_left">10dp</dimen>
     <dimen name="main_text_size">16sp</dimen>
+    <dimen name="item_decoration_size">1dp</dimen>
+    <dimen name="margin_left">20dp</dimen>
 
 </resources>

@@ -1,14 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.liweijie.design.graduation.gallery" >
+    package="com.liweijie.design.graduation.gallery">
+
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
     <application
         android:name="com.liweijie.design.graduation.gallery.GalleryApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
-        <activity android:name="com.liweijie.design.graduation.gallery.GalleryMainActivity" >
+        android:theme="@style/AppTheme">
+        <activity android:name="com.liweijie.design.graduation.gallery.GalleryMainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

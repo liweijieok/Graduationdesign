@@ -13,6 +13,7 @@ import com.liweijie.design.graduation.gallery.adapter.LeftMenuAdapter;
 import com.liweijie.design.graduation.gallery.base.BaseFragment;
 import com.liweijie.design.graduation.gallery.bean.LeftmenuBean;
 import com.liweijie.design.graduation.gallery.event.OnRecyclerViewItemClickListener;
+import com.liweijie.design.graduation.gallery.util.ResourceUtil;
 
 import java.util.ArrayList;
 
@@ -52,12 +53,18 @@ public class GalleryLeftMenuFragment extends BaseFragment {
 
     @Override
     public void recoverAndBeforeInfalter(@Nullable Bundle savedInstanceState) {
+        mCurrentIndex = savedInstanceState.getInt(KEY_INDEX);
+    }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(KEY_INDEX,mCurrentIndex);
     }
 
     @Override
     public void beforeInit() {
-        titles = getActivity().getResources().getStringArray(R.array.left_menu_title);
+        titles = ResourceUtil.getStringArray(R.array.left_menu_title);
         icons = new int[]{R.drawable.main_gallery, R.drawable.main_collect, R.drawable.main_secret, R.drawable.main_setting,
                 R.drawable.main_about};
         mCurrentIndex = getArguments().getInt(KEY_INDEX);
@@ -70,6 +77,7 @@ public class GalleryLeftMenuFragment extends BaseFragment {
             public void onItemClick(View view, LeftmenuBean bean, int position) {
 
                 if (mListener != null) {
+                    mCurrentIndex = position;
                     mAdapter.setSelected(position);
                     mListener.menuItemSelected(bean.getTitle(), position);
 
@@ -88,7 +96,7 @@ public class GalleryLeftMenuFragment extends BaseFragment {
             mLeftMenuData.add(bean);
         }
 
-        mAdapter = new LeftMenuAdapter(mLeftMenuData);
+        mAdapter = new LeftMenuAdapter(mLeftMenuData,mCurrentIndex);
         core_recycler_view.setLayoutManager(new LinearLayoutManager(getActivity()));
         core_recycler_view.setAdapter(mAdapter);
 

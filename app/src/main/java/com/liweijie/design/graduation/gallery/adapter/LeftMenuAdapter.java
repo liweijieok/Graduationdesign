@@ -20,12 +20,14 @@ import butterknife.Bind;
 public class LeftMenuAdapter extends BaseRecyclerAdapter<LeftmenuBean> {
 
     private int selected;
-    public LeftMenuAdapter(List<LeftmenuBean> mDatas) {
-        super(mDatas);
+
+    public LeftMenuAdapter(List<LeftmenuBean> mDatas, int selected) {
+        super(mDatas, 0, 0);
+        this.selected = selected;
     }
 
     @Override
-    public BaseRecyclerHolder getHolder(View itemtView, int viewType) {
+    public BaseRecyclerHolder getHolder(View itemtView) {
         return new LeftMenuHolder(itemtView);
     }
 
@@ -34,6 +36,7 @@ public class LeftMenuAdapter extends BaseRecyclerAdapter<LeftmenuBean> {
         return R.layout.item_left_menu;
     }
 
+
     @Override
     public void converHolderView(BaseRecyclerHolder holder, LeftmenuBean leftmenuBean, int position) {
         LeftMenuHolder baseHolder = (LeftMenuHolder) holder;
@@ -41,7 +44,7 @@ public class LeftMenuAdapter extends BaseRecyclerAdapter<LeftmenuBean> {
         baseHolder.tv_left_menu_title.setText(leftmenuBean.getTitle());
         if (position == selected) {
             baseHolder.tv_left_menu_title.setTextColor(ResourceUtil.getColor(R.color.main_color));
-        }else {
+        } else {
             baseHolder.tv_left_menu_title.setTextColor(ResourceUtil.getColor(R.color.white));
         }
     }
@@ -64,6 +67,7 @@ public class LeftMenuAdapter extends BaseRecyclerAdapter<LeftmenuBean> {
         this.selected = selected;
         notifyDataSetChanged();
     }
+
 
 
 }
