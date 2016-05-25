@@ -1,52 +1,54 @@
 package com.liweijie.design.graduation.gallery.fragment.content;
 
 import android.app.ProgressDialog;
-import android.content.ContentResolver;
-import android.database.Cursor;
+import android.content.Intent;
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
-import android.os.Looper;
-import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.Toast;
+import android.widget.LinearLayout;
 
 import com.liweijie.design.graduation.gallery.R;
+import com.liweijie.design.graduation.gallery.activity.gallery.FolderImageActivity;
 import com.liweijie.design.graduation.gallery.adapter.CollectFragmentAdapter;
 import com.liweijie.design.graduation.gallery.app.App;
 import com.liweijie.design.graduation.gallery.app.GalleryConstants;
-import com.liweijie.design.graduation.gallery.base.BaseFragment;
 import com.liweijie.design.graduation.gallery.bean.ImageBean;
-import com.liweijie.design.graduation.gallery.coer.ThreadPoolManager;
 import com.liweijie.design.graduation.gallery.event.OnRecyclerViewItemClickListener;
 import com.liweijie.design.graduation.gallery.event.OnRecyclerViewItemLongClickListener;
 import com.liweijie.design.graduation.gallery.fragment.BaseGridFragment;
 import com.liweijie.design.graduation.gallery.util.FilesUtil;
 import com.liweijie.design.graduation.gallery.util.PhotoList;
 import com.liweijie.design.graduation.gallery.util.ResourceUtil;
+import com.liweijie.design.graduation.gallery.util.SPUtil;
 import com.liweijie.design.graduation.gallery.util.ToastUtil;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 
 import java.io.File;
-import java.io.FilenameFilter;
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
+
+import butterknife.Bind;
 
 /**
  * Created by liweijie on 2016/5/19.
  */
-public class GalleryContentFragment extends BaseGridFragment {
+public class GalleryContentFragment extends BaseGridFragment implements View.OnClickListener {
     private List<ImageBean> mDatas;
     private ProgressDialog mDialog;
     private ScanPhotoHelper mHelper;
     private CollectFragmentAdapter mAdapter;
+    @Bind(R.id.gallery_build_lly)
+    LinearLayout gallery_build_lly;
+    @Bind(R.id.gallery_menu_lly)
+    LinearLayout gallery_menu_lly;
+    @Bind(R.id.core_recycler_view)
+    RecyclerView core_recycler_view;
 
     @Override
     public int getLayoutId() {
@@ -60,11 +62,12 @@ public class GalleryContentFragment extends BaseGridFragment {
 
     @Override
     public void beforeInit() {
-
     }
 
     @Override
     public void initEvent() {
+        gallery_build_lly.setOnClickListener(this);
+        gallery_menu_lly.setOnClickListener(this);
 
     }
 
@@ -83,14 +86,25 @@ public class GalleryContentFragment extends BaseGridFragment {
         }
         // 开始扫描
         mDatas = new ArrayList<>();
-        mDialog = ProgressDialog.show(getActivity(), null, "正在扫描图片中...");
-        mHelper.scaningSDcard(mDatas, mHandler);
+        // 第一次需要显示对话框
+        if (SPUtil.get(GalleryConstants.IS_FIRST, true)) {
+            mDialog = ProgressDialog.show(getActivity(), null, "正在扫描图片中...");
+            mHelper.scaningSDcard(mDatas, mHandler);
+        } else {
+            //第二次扫描本地数据库
+            mHelper.scaningDB(mDatas);
+            data2RecyclerView();
+            initRecyclerEvent();
+            mHelper.scaningSDcard(mDatas, mHandler);
+        }
+
+
     }
 
-
     @Override
-    public RecyclerView.LayoutManager getLayoutManager() {
-        return new LinearLayoutManager(getActivity());
+    public void onStop() {
+        super.onStop();
+        SPUtil.set(GalleryConstants.IS_FIRST, false);
     }
 
     @Override
@@ -102,15 +116,11 @@ public class GalleryContentFragment extends BaseGridFragment {
     // 自定义的方法
     private Handler mHandler = new Handler() {
         public void handleMessage(android.os.Message msg) {
-            if (mDialog.isShowing())
+            if (mDialog != null && mDialog.isShowing())
                 mDialog.dismiss();
             if (msg.what == GalleryConstants.SCAN_PHOTO_ERROR) {
                 ToastUtil.showLong(R.string.system_no_pic);
             } else if (msg.what == GalleryConstants.SCAN_PHOTO_FINISH) {
-                if (mDatas.size() == 0) {
-                    ToastUtil.showLong(R.string.system_no_pic);
-                    return;
-                }
                 data2RecyclerView();
                 initRecyclerEvent();
             }
@@ -123,7 +133,19 @@ public class GalleryContentFragment extends BaseGridFragment {
         mAdapter.setOnItemClickListener(new OnRecyclerViewItemClickListener<ImageBean>() {
             @Override
             public void onItemClick(View view, ImageBean bean, int position) {
+                Intent newIntent = new Intent(getActivity(), FolderImageActivity.class);
+                String title = bean.getName().substring(1, bean.getName().length());
+                ;
+                if (position != 0) {
+                    newIntent.putExtra(GalleryConstants.ACTIVITY_GALLERY_FODER_DIR, mDatas.get(position).getDir());
+                    // 获取文件夹下面的图片
+                    PhotoList.mInfo = Arrays.asList(new File(mDatas.get(position).getDir())
+                            .list(FilesUtil.getFilenameFilter()));
+                }
 
+                newIntent.putExtra(GalleryConstants.ACTIVITY_GALLERY_FODER_TITLE, title);
+
+                startActivity(newIntent);
             }
         });
 
@@ -139,15 +161,31 @@ public class GalleryContentFragment extends BaseGridFragment {
      * 绑定数据到recyclerview
      */
     private void data2RecyclerView() {
+        if (mDatas.size() == 0) {
+            ToastUtil.showLong(R.string.system_no_pic);
+            return;
+        }
         mAdapter = new CollectFragmentAdapter(mDatas);
-        setRecycler();
+        core_recycler_view.setLayoutManager(new LinearLayoutManager(getActivity()));
         core_recycler_view.addItemDecoration(new HorizontalDividerItemDecoration.Builder(App.me())
                 .color(Color.parseColor("#dddddd"))
-                .margin((int)ResourceUtil.getDimen(R.dimen.margin_left),0)
-                .size((int)ResourceUtil.getDimen(R.dimen.item_decoration_size)).build());
+                .margin((int) ResourceUtil.getDimen(R.dimen.margin_left), (int) ResourceUtil.getDimen(R.dimen.margin_left))
+                .size((int) ResourceUtil.getDimen(R.dimen.item_decoration_size)).build());
         core_recycler_view.setAdapter(mAdapter);
 
     }
 
 
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.gallery_menu_lly:
+
+                break;
+            case R.id.gallery_build_lly:
+
+                break;
+
+        }
+    }
 }

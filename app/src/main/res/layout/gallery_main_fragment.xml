@@ -9,32 +9,44 @@
         android:layout_height="match_parent"/>
 
     <LinearLayout
-        android:background="@color/white"
+        android:background="#f0f0f0"
         android:layout_gravity="bottom"
         android:id="@+id/gallery_bottom_root"
        android:layout_width="match_parent"
-        android:layout_height="30dp"
-        android:gravity="center_horizontal"
+        android:layout_height="50dp"
+        android:gravity="center"
         android:orientation="horizontal">
 
         <LinearLayout
+            android:id="@+id/gallery_build_lly"
             style="@style/style1"
             android:layout_weight="1"
             android:gravity="center"
             android:orientation="vertical">
-
+            <ImageView
+                android:layout_marginTop="4dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/build_image"/>
             <TextView
+                android:textSize="12sp"
                 style="@style/style1"
                 android:text="新建相册" />
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/gallery_menu_lly"
             style="@style/style1"
             android:layout_weight="1"
             android:gravity="center"
             android:orientation="vertical">
-
+            <ImageView
+                android:layout_marginTop="4dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/menu_image"/>
             <TextView
+                android:textSize="12sp"
                 style="@style/style1"
                 android:text="菜单" />
         </LinearLayout>

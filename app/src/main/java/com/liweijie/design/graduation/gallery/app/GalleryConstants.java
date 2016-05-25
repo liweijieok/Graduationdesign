@@ -17,5 +17,14 @@ public interface GalleryConstants {
     int SCAN_PHOTO_FINISH = AtomicIntegerUtil.getNewInt();
     int SCAN_PHOTO_ERROR = AtomicIntegerUtil.getNewInt();
 
+    // Activity
+    String ACTIVITY_GALLERY_FODER_DATA = "activity_gallery_folder_data";
+    String ACTIVITY_GALLERY_FODER_TITLE = "activity_gallery_folder_title";
+    String ACTIVITY_GALLERY_FODER_DIR = "activity_gallery_folder_dir";
+
+    String ACTIVITY_FOLDER_IMAGE_PATH = "activity_folder_image_path";
+
+    //    Preference
+    String IS_FIRST = "is_first";
 
 }

@@ -9,6 +9,8 @@
     <dimen name="main_margin_left">10dp</dimen>
     <dimen name="main_text_size">16sp</dimen>
     <dimen name="item_decoration_size">1dp</dimen>
+    <dimen name="item_decoration_siz2">4dp</dimen>
     <dimen name="margin_left">20dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
 
 </resources>

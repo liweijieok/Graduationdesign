@@ -161,6 +161,7 @@ public class GalleryMainActivity extends BaseActivity implements GalleryLeftMenu
     public void menuItemSelected(String title, int position) {
         main_drawerlayout.closeDrawers();
         if (position != mCurrentIndex) {
+            mCurrentIndex = position;
             showFragment(position);
             mTitle = title;
             main_toolbar.setTitle(mTitle);

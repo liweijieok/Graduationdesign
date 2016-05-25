@@ -7,6 +7,7 @@ import com.liweijie.design.graduation.gallery.base.BaseActivity;
 
 /**
  * Created by liweijie on 2016/5/18.
+ *
  */
 public class WelcomeActivity extends BaseActivity {
     @Override
