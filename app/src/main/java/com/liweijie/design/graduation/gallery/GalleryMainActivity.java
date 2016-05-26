@@ -13,6 +13,7 @@ import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 
+import com.liweijie.design.graduation.gallery.app.GalleryConstants;
 import com.liweijie.design.graduation.gallery.base.BaseActivity;
 import com.liweijie.design.graduation.gallery.fragment.GalleryAboutFragment;
 import com.liweijie.design.graduation.gallery.fragment.GalleryCollectFragment;
@@ -20,6 +21,7 @@ import com.liweijie.design.graduation.gallery.fragment.content.GalleryContentFra
 import com.liweijie.design.graduation.gallery.fragment.GalleryLeftMenuFragment;
 import com.liweijie.design.graduation.gallery.fragment.GallerySecretFragment;
 import com.liweijie.design.graduation.gallery.fragment.GallerySettingFragment;
+import com.liweijie.design.graduation.gallery.util.SPUtil;
 
 import butterknife.Bind;
 
@@ -166,5 +168,11 @@ public class GalleryMainActivity extends BaseActivity implements GalleryLeftMenu
             mTitle = title;
             main_toolbar.setTitle(mTitle);
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        SPUtil.set(GalleryConstants.IS_FIRST, false);
     }
 }

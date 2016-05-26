@@ -2,6 +2,7 @@ package com.liweijie.design.graduation.gallery.util;
 
 import java.io.File;
 import java.io.FilenameFilter;
+import java.io.IOException;
 
 /**
  * Created by liweijie on 2016/5/24.
@@ -41,6 +42,16 @@ public class FilesUtil {
 
     public static boolean isExists(String absolutePath){
         return isExists(new File(absolutePath));
+    }
+
+    public static void createFile(File file) {
+      if(!isExists(file)){
+          try {
+              file.createNewFile();
+          } catch (IOException e) {
+              e.printStackTrace();
+          }
+      }
     }
 
     public static boolean isExists(File file){
