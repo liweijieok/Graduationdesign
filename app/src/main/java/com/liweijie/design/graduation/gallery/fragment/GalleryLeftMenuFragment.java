@@ -76,14 +76,18 @@ public class GalleryLeftMenuFragment extends BaseFragment {
             @Override
             public void onItemClick(View view, LeftmenuBean bean, int position) {
 
-                if (mListener != null) {
-                    mCurrentIndex = position;
-                    mAdapter.setSelected(position);
-                    mListener.menuItemSelected(bean.getTitle(), position);
-
-                }
+                updateMenu(position, bean.getTitle());
             }
         });
+    }
+
+    public void updateMenu(int position,String title) {
+        if (mListener != null) {
+            mCurrentIndex = position;
+            mAdapter.setSelected(position);
+            mListener.menuItemSelected(title, position);
+
+        }
     }
 
     @Override

@@ -6,5 +6,7 @@
     <string name="system_no_pic">没有本地图片存在！</string>
     <string name="title_activity_folder_image">FolderImageActivity</string>
     <string name="title_activity_image_detail">ImageDetailActivity</string>
+    <item type="id" name="path"></item>
+    <item type="id" name="listener"></item>
 
 </resources>

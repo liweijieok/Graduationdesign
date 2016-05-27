@@ -16,7 +16,7 @@ import android.view.View;
 import com.liweijie.design.graduation.gallery.app.GalleryConstants;
 import com.liweijie.design.graduation.gallery.base.BaseActivity;
 import com.liweijie.design.graduation.gallery.fragment.GalleryAboutFragment;
-import com.liweijie.design.graduation.gallery.fragment.GalleryCollectFragment;
+import com.liweijie.design.graduation.gallery.fragment.collect.GalleryCollectFragment;
 import com.liweijie.design.graduation.gallery.fragment.content.GalleryContentFragment;
 import com.liweijie.design.graduation.gallery.fragment.GalleryLeftMenuFragment;
 import com.liweijie.design.graduation.gallery.fragment.GallerySecretFragment;
@@ -25,7 +25,7 @@ import com.liweijie.design.graduation.gallery.util.SPUtil;
 
 import butterknife.Bind;
 
-public class GalleryMainActivity extends BaseActivity implements GalleryLeftMenuFragment.OnMenuItemSelectedListener{
+public class GalleryMainActivity extends BaseActivity implements GalleryLeftMenuFragment.OnMenuItemSelectedListener {
     @Bind(R.id.main_toolbar)
     Toolbar main_toolbar;
     @Bind(R.id.main_drawerlayout)
@@ -85,12 +85,12 @@ public class GalleryMainActivity extends BaseActivity implements GalleryLeftMenu
     private void showFragment(int i) {
         FragmentTransaction fragmentTransaction = fm.beginTransaction();
         hide(fragmentTransaction);
-        showFragment(i, fragmentTransaction,mFragments[i]);
+        showFragment(i, fragmentTransaction, mFragments[i]);
         fragmentTransaction.commit();
 
     }
 
-    private <T extends Fragment> void showFragment(int index, FragmentTransaction fragmentTransaction,Class<T> clazz) {
+    private <T extends Fragment> void showFragment(int index, FragmentTransaction fragmentTransaction, Class<T> clazz) {
         Fragment fg = fm.findFragmentByTag(String.valueOf(index));
         if (fg == null) {
             try {
@@ -102,13 +102,13 @@ public class GalleryMainActivity extends BaseActivity implements GalleryLeftMenu
                 e.printStackTrace();
             }
 
-        }else {
+        } else {
             fragmentTransaction.show(fg);
         }
     }
 
     private void hide(FragmentTransaction fragmentTransaction) {
-        for (int i=0;i<mFragments.length;i++) {
+        for (int i = 0; i < mFragments.length; i++) {
             Fragment fg = fm.findFragmentByTag(String.valueOf(i));
             if (fg != null) {
                 fragmentTransaction.hide(fg);
@@ -123,7 +123,7 @@ public class GalleryMainActivity extends BaseActivity implements GalleryLeftMenu
 
     @Override
     public void recoverAndBeforeInfalter(@Nullable Bundle savedInstanceState) {
-        mTitle = savedInstanceState.getString(KEY_TITLE,null);
+        mTitle = savedInstanceState.getString(KEY_TITLE, null);
         mCurrentIndex = savedInstanceState.getInt(KEY_INDEX);
         if (TextUtils.isEmpty(mTitle)) {
             mTitle = getResources().getStringArray(R.array.left_menu_title)[0];
@@ -155,8 +155,22 @@ public class GalleryMainActivity extends BaseActivity implements GalleryLeftMenu
         if (keyCode == KeyEvent.KEYCODE_BACK && isLeftMenuOpen) {
             main_drawerlayout.closeDrawers();
             return true;
+        } else if (keyCode == KeyEvent.KEYCODE_BACK) {
+            Fragment fm = getSupportFragmentManager().findFragmentByTag("1");
+            if (mCurrentIndex == 1&&fm != null && fm instanceof GalleryCollectFragment&&((GalleryCollectFragment) fm).isSelecting()) {
+                    ((GalleryCollectFragment) fm).showCheckBox(false);
+                    return true;
+            } else if (mCurrentIndex != 0) {
+                mLeftMenu.updateMenu(0, getResources().getStringArray(R.array.left_menu_title)[0]);
+                return true;
+            } else {
+                return super.onKeyDown(keyCode, event);
+            }
+
         }
         return super.onKeyDown(keyCode, event);
+
+
     }
 
     @Override
@@ -175,4 +189,6 @@ public class GalleryMainActivity extends BaseActivity implements GalleryLeftMenu
         super.onDestroy();
         SPUtil.set(GalleryConstants.IS_FIRST, false);
     }
+
+
 }

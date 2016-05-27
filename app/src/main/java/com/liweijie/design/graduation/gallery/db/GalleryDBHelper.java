@@ -17,7 +17,9 @@ public class GalleryDBHelper extends SQLiteOpenHelper {
     private String FOLDER_DB = "folder";
     private String CREATE_FOLDER_DB = "id integer primary key autoincrement ,count integer ,firstImage varchar(60),name varchar(20), dir varchar(40)";
 
-
+    // 收藏
+    private String COLLECT_DB = "collect";
+    private String CREATE_COLLECT="id integer primary key autoincrement ,image varchar(60)";
     private static GalleryDBHelper helper;
 
     public static GalleryDBHelper getInstace(){
@@ -38,11 +40,13 @@ public class GalleryDBHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(getDBHeader(FOLDER_DB, CREATE_FOLDER_DB));
+        db.execSQL(getDBHeader(COLLECT_DB, CREATE_COLLECT));
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL(getDropTable(FOLDER_DB));
+        db.execSQL(getDropTable(COLLECT_DB));
         onCreate(db);
     }
 

@@ -1,19 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:background="@color/white"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:paddingTop="@dimen/toolbar_paddingtop">
 
-    <ImageView
-        android:id="@+id/image_detail_iv"
-        android:layout_above="@+id/core_recycler_view"
-        android:src="@drawable/user_icon"
+    <TextView
+        android:id="@+id/image_detail_tv"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="30dp"
+        android:layout_alignParentTop="true"
+        android:background="@color/main_color"
+        android:gravity="center"
+        android:text="图片编辑" />
 
-    <include layout="@layout/core_recyclerview"
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/image_detail_root"
+        android:layout_below="@+id/image_detail_tv"
+        android:background="@color/white">
+
+        <ImageView
+            android:id="@+id/image_detail_iv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"
+            android:background="@color/white"
+            android:layout_margin="20dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/user_icon" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/image_detail_root"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:id="@+id/core_recycler_view"/>
+        android:background="@color/white">
+        <include
+            android:id="@+id/core_recycler_view"
+            layout="@layout/core_recyclerview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
 </RelativeLayout>

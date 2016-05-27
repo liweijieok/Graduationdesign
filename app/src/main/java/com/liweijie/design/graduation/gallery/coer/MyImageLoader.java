@@ -105,9 +105,9 @@ public class MyImageLoader {
             if (int1 > 0 && int1 < Integer.MAX_VALUE) {
                 value = int1;
             }
-        }  catch (IllegalAccessException e) {
+        } catch (IllegalAccessException e) {
             e.printStackTrace();
-        }catch (NoSuchFieldException e) {
+        } catch (NoSuchFieldException e) {
             e.printStackTrace();
         }
         return value;
@@ -175,21 +175,35 @@ public class MyImageLoader {
         }
     }
 
-    /**
-     * 下载图片
-     *
-     * @param path
-     * @param imageView
-     */
-    public void loadImage(final String path, final ImageView imageView) {
+    public interface LoadImageListener {
+
+        void loadSuccess(ImageView iv, String path);
+
+        void loadFail(ImageView iv, String path);
+    }
+
+
+    public void loadImage(final String path, final ImageView imageView, final LoadImageListener listener) {
         imageView.setTag(path);
         if (UIHandler == null) {
             UIHandler = new Handler() {
                 @Override
                 public void handleMessage(Message msg) {
                     ImageHolder holder = (ImageHolder) msg.obj;
+                    LoadImageListener li= holder.listener;
                     if (holder.path.equals(holder.imageview.getTag())) {
                         holder.imageview.setImageBitmap(holder.bm);
+                        if (li != null) {
+                            li.loadSuccess(imageView, path);
+                        } else {
+                            if (li != null) {
+                                li.loadFail(imageView, path);
+                            }
+                        }
+                    } else {
+                        if (li != null) {
+                            li.loadFail(imageView, path);
+                        }
                     }
 
                 }
@@ -198,7 +212,7 @@ public class MyImageLoader {
         Bitmap bm = getBitmapFromLruCache(path);
         Log.i("TAG", path + "=path");
         if (bm != null) {
-            refreshBitmap(path, imageView, bm);
+            refreshBitmap(path, imageView, bm,listener);
         } else {
             addTask(new Runnable() {
                 @Override
@@ -208,12 +222,22 @@ public class MyImageLoader {
                     Bitmap bm = decodeSampleBitmapFromPath(path, imgeViewSize.width, imgeViewSize.heigh);
                     if (bm != null) {
                         addBitmapToCache(path, bm);
-                        refreshBitmap(path, imageView, bm);
+                        refreshBitmap(path, imageView, bm,listener);
                     }
                     mSemaphoreThreadPool.release();
                 }
             });
         }
+    }
+
+    /**
+     * 下载图片
+     *
+     * @param path
+     * @param imageView
+     */
+    public void loadImage(final String path, final ImageView imageView) {
+        loadImage(path,imageView,null);
     }
 
     /**
@@ -223,11 +247,12 @@ public class MyImageLoader {
      * @param imageView
      * @param bm
      */
-    private void refreshBitmap(String path, final ImageView imageView, Bitmap bm) {
+    private void refreshBitmap(String path, final ImageView imageView, Bitmap bm,LoadImageListener listener) {
         Message msg = Message.obtain();
         ImageHolder holder = new ImageHolder();
         holder.bm = bm;
         holder.imageview = imageView;
+        holder.listener = listener;
         holder.path = path;
         msg.obj = holder;
         UIHandler.sendMessage(msg);
@@ -372,5 +397,6 @@ public class MyImageLoader {
         String path;
         Bitmap bm;
         ImageView imageview;
+        LoadImageListener listener;
     }
 }

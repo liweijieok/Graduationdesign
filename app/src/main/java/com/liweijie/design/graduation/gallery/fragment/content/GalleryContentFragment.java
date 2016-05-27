@@ -140,9 +140,9 @@ public class GalleryContentFragment extends BaseGridFragment implements View.OnC
                 String title = bean.getName().substring(1, bean.getName().length());
                 ;
                 if (position != 0) {
-                    newIntent.putExtra(GalleryConstants.ACTIVITY_GALLERY_FODER_DIR, mDatas.get(position).getDir());
+                    newIntent.putExtra(GalleryConstants.ACTIVITY_GALLERY_FODER_DIR, bean.getDir());
                     // 获取文件夹下面的图片
-                    PhotoList.mInfo = Arrays.asList(new File(mDatas.get(position).getDir())
+                    PhotoList.mInfo = Arrays.asList(new File(bean.getDir())
                             .list(FilesUtil.getFilenameFilter()));
                 }
 
