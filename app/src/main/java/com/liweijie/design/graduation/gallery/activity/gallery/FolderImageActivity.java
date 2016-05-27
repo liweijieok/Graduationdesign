@@ -1,16 +1,19 @@
 package com.liweijie.design.graduation.gallery.activity.gallery;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.view.View;
 import android.widget.TextView;
 
 import com.liweijie.design.graduation.gallery.R;
 import com.liweijie.design.graduation.gallery.adapter.FolderImageAdapter;
 import com.liweijie.design.graduation.gallery.app.GalleryConstants;
 import com.liweijie.design.graduation.gallery.base.BaseActivity;
+import com.liweijie.design.graduation.gallery.event.OnRecyclerViewItemClickListener;
 import com.liweijie.design.graduation.gallery.util.PhotoList;
 import com.liweijie.design.graduation.gallery.view.DividerGridItemDecoration;
 
@@ -46,7 +49,13 @@ public class FolderImageActivity extends BaseActivity {
 
     @Override
     public void initEvent() {
-
+        mAdapter.setOnItemClickListener(new OnRecyclerViewItemClickListener() {
+            @Override
+            public void onItemClick(View view, Object o, int position) {
+                Intent newIntent = new Intent(FolderImageActivity.this, ImageDetailActivity.class);
+                startActivity(newIntent);
+            }
+        });
     }
 
     @Override
