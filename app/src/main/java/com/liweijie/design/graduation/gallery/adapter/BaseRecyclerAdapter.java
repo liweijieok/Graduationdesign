@@ -181,36 +181,6 @@ public abstract class BaseRecyclerAdapter<T> extends RecyclerView.Adapter<BaseRe
         this.notifyDataSetChanged();
     }
 
-    public void addList(List<T> list) {
-        mDatas.addAll(list);
-        this.notifyDataSetChanged();
-    }
-
-    public void remove(T t) {
-        mDatas.remove(t);
-        this.notifyDataSetChanged();
-    }
-
-    public void removeList(List<T> list) {
-        for (int i = 0; i < list.size(); i++) {
-            T t = list.get(i);
-            if (mDatas.contains(t)) {
-                mDatas.remove(t);
-            }
-        }
-        this.notifyDataSetChanged();
-    }
-
-    public void clear() {
-        mDatas.clear();
-        this.notifyDataSetChanged();
-    }
-
-    public void clearAndRefresh(List<T> list) {
-        mDatas.clear();
-        mDatas.addAll(list);
-        this.notifyDataSetChanged();
-    }
 
     public T get(int position) {
         return mDatas.size() <= position ? mDatas.get(position) : null;

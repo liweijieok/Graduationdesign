@@ -1,8 +1,13 @@
 package com.liweijie.design.graduation.gallery.activity.gallery;
 
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.os.PersistableBundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.RecyclerView;
@@ -18,7 +23,11 @@ import com.liweijie.design.graduation.gallery.adapter.FolderImageAdapter;
 import com.liweijie.design.graduation.gallery.app.GalleryConstants;
 import com.liweijie.design.graduation.gallery.base.BaseActivity;
 import com.liweijie.design.graduation.gallery.bean.FolderImageBean;
+import com.liweijie.design.graduation.gallery.bean.SecretInfo;
+import com.liweijie.design.graduation.gallery.coer.MyImageLoader;
+import com.liweijie.design.graduation.gallery.coer.ThreadPoolManager;
 import com.liweijie.design.graduation.gallery.db.CollectService;
+import com.liweijie.design.graduation.gallery.db.SecretService;
 import com.liweijie.design.graduation.gallery.event.OnRecyclerViewItemClickListener;
 import com.liweijie.design.graduation.gallery.event.OnRecyclerViewItemLongClickListener;
 import com.liweijie.design.graduation.gallery.util.FilesUtil;
@@ -29,6 +38,8 @@ import com.liweijie.design.graduation.gallery.view.DividerGridItemDecoration;
 import com.liweijie.design.graduation.gallery.view.dialog.RecyclerDialogFragment;
 import com.liweijie.design.graduation.gallery.view.dialog.SimpleDialog;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -87,6 +98,7 @@ public class FolderImageActivity extends BaseActivity implements RecyclerDialogF
     private void gotoImageDetail(String o) {
         Intent newIntent = new Intent(FolderImageActivity.this, ImageDetailActivity.class);
         newIntent.putExtra(GalleryConstants.ACTIVITY_FOLDER_IMAGE_PATH, FilesUtil.getRealPath(mDir, o));
+        MyImageLoader.getInstance(2, MyImageLoader.Type.LIFO).clearCache();
         startActivity(newIntent);
     }
 
@@ -97,7 +109,6 @@ public class FolderImageActivity extends BaseActivity implements RecyclerDialogF
         mDir = getIntent().getStringExtra(GalleryConstants.ACTIVITY_GALLERY_FODER_DIR);
         mFolderImagePath = new ArrayList<>();
         if (mDir == null) {
-//            mFolderImagePath = new ArrayList<>(PhotoList.allPhoto);
             for (String s : PhotoList.allPhoto) {
                 FolderImageBean bean = new FolderImageBean(s, false);
                 mFolderImagePath.add(bean);
@@ -152,18 +163,16 @@ public class FolderImageActivity extends BaseActivity implements RecyclerDialogF
     @OnClick(R.id.folder_tv_lly6)
     public void collect() {
         if (mAdapter.getChonsen().size() > 0) {
-            if (mDir == null) {
+            if (mDir != null) {
                 List<String> strs = new ArrayList<>();
                 for (String s : mAdapter.getChonsen()) {
-                    strs.add(s);
+                    strs.add(FilesUtil.getRealPath(mDir, s));
                 }
                 collectService.saveCollectBeanList(strs);
             } else {
                 collectService.saveCollectBeanList(mAdapter.getChonsen());
             }
-            for (String s : mAdapter.getChonsen()) {
-                L.i("collectSave", s);
-            }
+
             ToastUtil.showShort("收藏成功");
         }
 
@@ -239,6 +248,7 @@ public class FolderImageActivity extends BaseActivity implements RecyclerDialogF
         mDatas.add("重命名");
         mDatas.add("设置为");
         mDatas.add("旋转");
+        mDatas.add("保密");
         mDatas.add("详细信息");
         menuDialog = (RecyclerDialogFragment) getSupportFragmentManager().findFragmentByTag("menuDialog");
         if (menuDialog == null) {
@@ -249,7 +259,7 @@ public class FolderImageActivity extends BaseActivity implements RecyclerDialogF
     }
 
     @Override
-    public void menuDialogClick(String str, int position) {
+    public void menuDialogClick(final String str, int position) {
         ToastUtil.showShort(str);
         if (menuDialog != null) {
             menuDialog.dismiss();
@@ -257,13 +267,82 @@ public class FolderImageActivity extends BaseActivity implements RecyclerDialogF
         if (position == 0) {
 
         } else if (position == 1) {
-            if (mAdapter.getChonsen().size() > 1)
+            if (mAdapter.getChonsen().size() > 0) {
                 if (mAdapter.getChonsen().size() >= 2) {
                     ToastUtil.showShort("图片多于2张，只对第一张就行编辑");
                 }
-            gotoImageDetail(mAdapter.getChonsen().get(0));
+                gotoImageDetail(mAdapter.getChonsen().get(0));
+            }
+        } else if (str.equals(6)) {
+
+            if (mAdapter.getChonsen().size() > 0) {
+                final List<String> strs = new ArrayList<>();
+                // 得到全路径
+                for (String s : mAdapter.getChonsen()) {
+                    strs.add(FilesUtil.getRealPath(mDir, s));
+                }
+
+                progressDialog = ProgressDialog.show(this, "", "正在保存到私密文件中...");
+                final File parent = FilesUtil.createFileDir(GalleryConstants.SECRET_FILE_NAME);
+                ThreadPoolManager.getInstance().execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        final List<SecretInfo> mSecret = new ArrayList<>();
+
+                        for (int i = 0; i < strs.size(); i++) {
+                            String s = strs.get(i);
+                            File file = new File(strs.get(i));
+                            if (FilesUtil.isExists(file)) {
+                                File newFile = new File(parent, s.substring(s.lastIndexOf(File.separator) + 1));
+                                L.i("SecretFile", newFile.getName());
+                                if (!newFile.exists()) {
+                                    try {
+                                        if (!newFile.createNewFile()) {
+                                            return;
+                                        }
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+
+                                FilesUtil.copyImage(s, newFile);
+                                SecretInfo info = new SecretInfo();
+                                info.setFileName(newFile.getName().substring(0, newFile.getName().indexOf(".") + 1));
+                                info.setFormat(newFile.getName().substring(newFile.getName().indexOf(".") + 1));
+                                mSecret.add(info);
+                            }
+
+                        }
+                        Message msg = Message.obtain();
+                        msg.what = 1;
+                        msg.obj = mSecret;
+                        mHandler.sendMessage(msg);
+                    }
+                });
+
+            }
         }
     }
 
+    SecretService secretService = new SecretService();
+    private ProgressDialog progressDialog;
 
+    public Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            if (progressDialog != null && progressDialog.isShowing()) {
+                progressDialog.dismiss();
+            }
+            List<SecretInfo> mSecret = (List<SecretInfo>) msg.obj;
+            secretService.saveSecretBeanList(mSecret);
+
+        }
+    };
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        MyImageLoader.getInstance(2, MyImageLoader.Type.LIFO).clearCache();
+    }
 }

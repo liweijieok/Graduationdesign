@@ -11,7 +11,8 @@ public interface GalleryConstants {
 
     //文件夹相关
     String BASE_FILE = "gallery";
-    String CRESH_FILE_NAME = "grallery_file";
+    String CRESH_FILE_NAME = "gralleryfile";
+    String SECRET_FILE_NAME = "secretphoto";
 
     // handler
     int SCAN_PHOTO_FINISH = AtomicIntegerUtil.getNewInt();
@@ -26,5 +27,6 @@ public interface GalleryConstants {
 
     //    Preference
     String IS_FIRST = "is_first";
+    String SECRET_PASSWORD = "secret_password";
 
 }

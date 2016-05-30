@@ -19,7 +19,7 @@ import com.liweijie.design.graduation.gallery.fragment.GalleryAboutFragment;
 import com.liweijie.design.graduation.gallery.fragment.collect.GalleryCollectFragment;
 import com.liweijie.design.graduation.gallery.fragment.content.GalleryContentFragment;
 import com.liweijie.design.graduation.gallery.fragment.GalleryLeftMenuFragment;
-import com.liweijie.design.graduation.gallery.fragment.GallerySecretFragment;
+import com.liweijie.design.graduation.gallery.fragment.secret.GallerySecretFragment;
 import com.liweijie.design.graduation.gallery.fragment.GallerySettingFragment;
 import com.liweijie.design.graduation.gallery.util.SPUtil;
 
@@ -90,12 +90,15 @@ public class GalleryMainActivity extends BaseActivity implements GalleryLeftMenu
 
     }
 
-    private <T extends Fragment> void showFragment(int index, FragmentTransaction fragmentTransaction, Class<T> clazz) {
+    private <T extends Fragment> void showFragment(int index,
+                          FragmentTransaction fragmentTransaction,
+                                                   Class<T> clazz) {
         Fragment fg = fm.findFragmentByTag(String.valueOf(index));
         if (fg == null) {
             try {
                 fg = clazz.newInstance();
-                fragmentTransaction.add(R.id.main_framelayout_content, fg, String.valueOf(index));
+                fragmentTransaction.add(R.id.main_framelayout_content, fg,
+                        String.valueOf(index));
             } catch (InstantiationException e) {
                 e.printStackTrace();
             } catch (IllegalAccessException e) {

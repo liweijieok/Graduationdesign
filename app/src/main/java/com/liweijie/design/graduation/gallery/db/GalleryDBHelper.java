@@ -20,6 +20,12 @@ public class GalleryDBHelper extends SQLiteOpenHelper {
     // 收藏
     private String COLLECT_DB = "collect";
     private String CREATE_COLLECT="id integer primary key autoincrement ,image varchar(60)";
+
+    // 私密相册
+
+    private String SECRET_DB = "secret";
+    private String CREATE_SECRET = "id integer primary key autoincrement ,image varchar(60),format varchar(10)";
+
     private static GalleryDBHelper helper;
 
     public static GalleryDBHelper getInstace(){
@@ -41,12 +47,14 @@ public class GalleryDBHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(getDBHeader(FOLDER_DB, CREATE_FOLDER_DB));
         db.execSQL(getDBHeader(COLLECT_DB, CREATE_COLLECT));
+        db.execSQL(getDBHeader(SECRET_DB, CREATE_SECRET));
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL(getDropTable(FOLDER_DB));
         db.execSQL(getDropTable(COLLECT_DB));
+        db.execSQL(getDropTable(SECRET_DB));
         onCreate(db);
     }
 

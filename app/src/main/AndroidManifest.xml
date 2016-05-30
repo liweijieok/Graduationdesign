@@ -14,18 +14,21 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
-        <activity android:name=".GalleryMainActivity">
+        <activity android:name=".activity.WelcomeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".GalleryMainActivity"/>
         <activity
             android:name=".activity.gallery.FolderImageActivity"
             android:label="@string/title_activity_folder_image" />
         <activity
             android:name=".activity.gallery.ImageDetailActivity"
+            android:label="@string/title_activity_image_detail" /> <activity
+            android:name=".activity.user.UserInfoActivity"
             android:label="@string/title_activity_image_detail" />
     </application>
 

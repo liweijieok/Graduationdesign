@@ -10,7 +10,6 @@ import java.util.List;
 
 /**
  * Created by liweijie on 2016/5/27.
- *
  */
 public class CollectService {
     private GalleryDBHelper helper;
@@ -21,6 +20,7 @@ public class CollectService {
 
     /**
      * 插入图片文件夹相关
+     *
      * @param image
      */
     public void saveCollectBean(String image) {
@@ -30,30 +30,42 @@ public class CollectService {
         SQLiteDatabase writableDatabase = helper.getWritableDatabase();
         writableDatabase.execSQL("insert into collect (image) values(?)",
                 new Object[]{image});
-        writableDatabase.close();
     }
 
     public void saveCollectBeanList(List<String> images) {
-        if (images == null || images.size() <=0) {
+        if (images == null || images.size() <= 0) {
             return;
         }
         for (String s : images) {
-            saveCollectBean(s);
+            // 避免重复
+            if (getCollect(s) == null) {
+                saveCollectBean(s);
+            }
+
         }
     }
 
+    public String getCollect(String fullpath) {
+        SQLiteDatabase readableDatabase = helper.getReadableDatabase();
+        Cursor cursor = readableDatabase.rawQuery("select image from collect where image=?", new String[]{fullpath});
+        if (cursor.moveToFirst()) {
+            return cursor.getString(0);
+        }
+        cursor.close();
+        return null;
+    }
+
     public List<String> getCollectBeanList() {
-        L.i("collectGet","getCollectBeanList");
+        L.i("collectGet", "getSecretBeanList");
         SQLiteDatabase readableDatabase = helper.getReadableDatabase();
         Cursor cursor = readableDatabase.rawQuery("select image from collect", null);
         List<String> beans = new ArrayList<>();
         while (cursor.moveToNext()) {
             String str = cursor.getString(0);
             beans.add(str);
-            L.i("collectGet",str+"");
+            L.i("collectGet", str + "");
         }
         cursor.close();
-        readableDatabase.close();
         return beans;
     }
 
@@ -67,13 +79,12 @@ public class CollectService {
     }
 
     public void deleteCollectionList(List<String> deleteList) {
-        L.i("collectDetale",deleteList.size()+"");
-        if(deleteList == null || deleteList.size() <= 0)
-        {
+        L.i("collectDetale", deleteList.size() + "");
+        if (deleteList == null || deleteList.size() <= 0) {
             return;
         }
         for (String s : deleteList) {
-            L.i("collectDetale",s+"");
+            L.i("collectDetale", s + "");
             deleteCollect(s);
         }
     }

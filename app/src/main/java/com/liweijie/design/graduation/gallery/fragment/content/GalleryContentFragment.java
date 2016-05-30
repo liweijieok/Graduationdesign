@@ -18,6 +18,7 @@ import com.liweijie.design.graduation.gallery.adapter.CollectFragmentAdapter;
 import com.liweijie.design.graduation.gallery.app.App;
 import com.liweijie.design.graduation.gallery.app.GalleryConstants;
 import com.liweijie.design.graduation.gallery.bean.ImageBean;
+import com.liweijie.design.graduation.gallery.coer.MyImageLoader;
 import com.liweijie.design.graduation.gallery.event.OnRecyclerViewItemClickListener;
 import com.liweijie.design.graduation.gallery.event.OnRecyclerViewItemLongClickListener;
 import com.liweijie.design.graduation.gallery.fragment.BaseGridFragment;
@@ -41,7 +42,7 @@ import butterknife.Bind;
 /**
  * Created by liweijie on 2016/5/19.
  */
-public class GalleryContentFragment extends BaseGridFragment implements View.OnClickListener, RecyclerDialogFragment.OnMenuDialogListener,BuildGalleryDialogFragment.OnBuildDialogListener {
+public class GalleryContentFragment extends BaseGridFragment implements View.OnClickListener, RecyclerDialogFragment.OnMenuDialogListener, BuildGalleryDialogFragment.OnBuildDialogListener {
     private List<ImageBean> mDatas;
     private ProgressDialog mDialog;
     private ScanPhotoHelper mHelper;
@@ -77,6 +78,14 @@ public class GalleryContentFragment extends BaseGridFragment implements View.OnC
     @Override
     public void initData() {
         mHelper = new ScanPhotoHelper();
+        core_recycler_view.setLayoutManager(new LinearLayoutManager(getActivity()));
+        core_recycler_view.addItemDecoration(new HorizontalDividerItemDecoration.Builder(App.me())
+                .color(Color.parseColor("#dddddd"))
+                .margin((int) ResourceUtil.getDimen(R.dimen.margin_left), (int) ResourceUtil.getDimen(R.dimen.margin_left))
+                .size((int) ResourceUtil.getDimen(R.dimen.item_decoration_size)).build());
+        mDatas = new ArrayList<>();
+        mAdapter = new CollectFragmentAdapter(mDatas);
+        core_recycler_view.setAdapter(mAdapter);
         scanPhoto();
 
     }
@@ -147,7 +156,7 @@ public class GalleryContentFragment extends BaseGridFragment implements View.OnC
                 }
 
                 newIntent.putExtra(GalleryConstants.ACTIVITY_GALLERY_FODER_TITLE, title);
-
+                MyImageLoader.getInstance(2, MyImageLoader.Type.LIFO).clearCache();
                 startActivity(newIntent);
             }
         });
@@ -160,6 +169,7 @@ public class GalleryContentFragment extends BaseGridFragment implements View.OnC
         });
     }
 
+
     /**
      * 绑定数据到recyclerview
      */
@@ -168,13 +178,9 @@ public class GalleryContentFragment extends BaseGridFragment implements View.OnC
             ToastUtil.showLong(R.string.system_no_pic);
             return;
         }
-        mAdapter = new CollectFragmentAdapter(mDatas);
-        core_recycler_view.setLayoutManager(new LinearLayoutManager(getActivity()));
-        core_recycler_view.addItemDecoration(new HorizontalDividerItemDecoration.Builder(App.me())
-                .color(Color.parseColor("#dddddd"))
-                .margin((int) ResourceUtil.getDimen(R.dimen.margin_left), (int) ResourceUtil.getDimen(R.dimen.margin_left))
-                .size((int) ResourceUtil.getDimen(R.dimen.item_decoration_size)).build());
-        core_recycler_view.setAdapter(mAdapter);
+        mAdapter.getDatas().addAll(mDatas);
+        mAdapter.notifyDataSetChanged();
+
 
     }
 
@@ -203,7 +209,7 @@ public class GalleryContentFragment extends BaseGridFragment implements View.OnC
                     buildDialog = BuildGalleryDialogFragment.getInstance();
                     buildDialog.setOnBuildDialogListener(this);
                 }
-                buildDialog.show(getFragmentManager(),"buildDialog");
+                buildDialog.show(getFragmentManager(), "buildDialog");
                 break;
 
         }
@@ -225,7 +231,7 @@ public class GalleryContentFragment extends BaseGridFragment implements View.OnC
 
     @Override
     public void buildDialog(String file, File dir) {
-        L.i("BuildPath", file +" == "+ dir.getName());
+        L.i("BuildPath", file + " == " + dir.getName());
         File newGallery = new File(dir, file);
         FilesUtil.createFile(newGallery);
         // 保存新建类型数据库

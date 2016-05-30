@@ -33,6 +33,7 @@ import java.util.List;
 import java.util.UUID;
 
 import butterknife.Bind;
+import butterknife.ButterKnife;
 
 /**
  * Created by liweijie on 2016/5/25.
@@ -79,6 +80,7 @@ public class ImageDetailActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        MyImageLoader.getInstance(2, MyImageLoader.Type.LIFO).clearCache();
         originDrawable = null;
     }
 
@@ -151,4 +153,5 @@ public class ImageDetailActivity extends BaseActivity {
         }
         return super.onKeyDown(keyCode, event);
     }
+
 }

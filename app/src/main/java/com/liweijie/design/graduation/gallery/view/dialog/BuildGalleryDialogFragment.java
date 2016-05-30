@@ -1,6 +1,5 @@
 package com.liweijie.design.graduation.gallery.view.dialog;
 
-import android.app.DialogFragment;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.StatFs;
@@ -18,7 +17,6 @@ import com.liweijie.design.graduation.gallery.R;
 import com.liweijie.design.graduation.gallery.adapter.BuildDialogAdapter;
 import com.liweijie.design.graduation.gallery.app.App;
 import com.liweijie.design.graduation.gallery.bean.BuildDialogBean;
-import com.liweijie.design.graduation.gallery.event.OnRecyclerViewItemClickListener;
 
 import java.io.File;
 import java.util.ArrayList;

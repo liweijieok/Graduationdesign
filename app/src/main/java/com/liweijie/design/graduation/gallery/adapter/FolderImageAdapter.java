@@ -1,19 +1,15 @@
 package com.liweijie.design.graduation.gallery.adapter;
 
-import android.os.Handler;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 
 import com.liweijie.design.graduation.gallery.R;
 import com.liweijie.design.graduation.gallery.bean.FolderImageBean;
 import com.liweijie.design.graduation.gallery.coer.MyImageLoader;
 import com.liweijie.design.graduation.gallery.util.FilesUtil;
-import com.liweijie.design.graduation.gallery.util.L;
 
 import java.util.ArrayList;
 import java.util.List;

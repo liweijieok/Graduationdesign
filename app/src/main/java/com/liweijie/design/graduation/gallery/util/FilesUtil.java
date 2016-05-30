@@ -1,8 +1,13 @@
 package com.liweijie.design.graduation.gallery.util;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.Environment;
+
+import com.liweijie.design.graduation.gallery.app.GalleryConstants;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FilenameFilter;
@@ -89,7 +94,7 @@ public class FilesUtil {
     public static void save(Bitmap bitmap, File file, String str) {
         FileOutputStream fos = null;
         try {
-            fos  =new FileOutputStream(file);
+            fos = new FileOutputStream(file);
             if (str.endsWith("jpg") || str.endsWith("jpeg")) {
                 bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
             } else {
@@ -109,6 +114,32 @@ public class FilesUtil {
                 }
             }
         }
+
+    }
+
+    /**
+     *
+     */
+    public static File createFileDir(String name) {
+        if (!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+            ToastUtil.showLong("外部存储卡不可用");
+        }
+        // 父容器
+        File parent = new File(Environment.getExternalStorageDirectory(), GalleryConstants.BASE_FILE);
+        if (!parent.exists()) {
+            parent.mkdirs();
+        }
+        File newFile = new File(parent, name);
+        if (!newFile.exists()) {
+            newFile.mkdirs();
+        }
+        return newFile;
+    }
+
+
+    public static void copyImage(String old,File newFile){
+        Bitmap bitmap = BitmapFactory.decodeFile(old);
+        save(bitmap, newFile, newFile.getAbsolutePath());
 
     }
 }

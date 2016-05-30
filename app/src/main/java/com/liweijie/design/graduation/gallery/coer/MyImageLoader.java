@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.support.v4.util.LruCache;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.ViewGroup.LayoutParams;
@@ -190,7 +191,7 @@ public class MyImageLoader {
                 @Override
                 public void handleMessage(Message msg) {
                     ImageHolder holder = (ImageHolder) msg.obj;
-                    LoadImageListener li= holder.listener;
+                    LoadImageListener li = holder.listener;
                     if (holder.path.equals(holder.imageview.getTag())) {
                         holder.imageview.setImageBitmap(holder.bm);
                         if (li != null) {
@@ -212,7 +213,7 @@ public class MyImageLoader {
         Bitmap bm = getBitmapFromLruCache(path);
         Log.i("TAG", path + "=path");
         if (bm != null) {
-            refreshBitmap(path, imageView, bm,listener);
+            refreshBitmap(path, imageView, bm, listener);
         } else {
             addTask(new Runnable() {
                 @Override
@@ -222,7 +223,7 @@ public class MyImageLoader {
                     Bitmap bm = decodeSampleBitmapFromPath(path, imgeViewSize.width, imgeViewSize.heigh);
                     if (bm != null) {
                         addBitmapToCache(path, bm);
-                        refreshBitmap(path, imageView, bm,listener);
+                        refreshBitmap(path, imageView, bm, listener);
                     }
                     mSemaphoreThreadPool.release();
                 }
@@ -237,7 +238,7 @@ public class MyImageLoader {
      * @param imageView
      */
     public void loadImage(final String path, final ImageView imageView) {
-        loadImage(path,imageView,null);
+        loadImage(path, imageView, null);
     }
 
     /**
@@ -247,7 +248,7 @@ public class MyImageLoader {
      * @param imageView
      * @param bm
      */
-    private void refreshBitmap(String path, final ImageView imageView, Bitmap bm,LoadImageListener listener) {
+    private void refreshBitmap(String path, final ImageView imageView, Bitmap bm, LoadImageListener listener) {
         Message msg = Message.obtain();
         ImageHolder holder = new ImageHolder();
         holder.bm = bm;
@@ -307,6 +308,12 @@ public class MyImageLoader {
             sampleSize = Math.max(widthRadio, heighRadio);
         }
         return sampleSize;
+    }
+
+    public void clearCache() {
+        if (mLruCache != null && mLruCache.size() > 0) {
+            mLruCache.evictAll();
+        }
     }
 
     /**
@@ -371,6 +378,9 @@ public class MyImageLoader {
      * @return
      */
     private Bitmap getBitmapFromLruCache(String path) {
+        if (TextUtils.isEmpty(path)) {
+            return null;
+        }
         return mLruCache.get(path);
     }
 
